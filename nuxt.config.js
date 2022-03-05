@@ -17,6 +17,7 @@ export default {
     ],
     script: [
       { src: "/js/bootstrap.bundle.min.js" },
+      { src: "https://kit.fontawesome.com/18956ba71f.js", crossorigin:"anonymous"},
     ],
   },
 

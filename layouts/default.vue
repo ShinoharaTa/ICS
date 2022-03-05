@@ -3,5 +3,6 @@
     <CommonHeader />
     <Nuxt />
     <CommonFooter />
+    <Loading />
   </div>
 </template>
