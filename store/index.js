@@ -1,3 +1,4 @@
+import { async } from '@firebase/util';
 import { getAuth, signOut, deleteUser, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export const state = () => ({
@@ -49,21 +50,7 @@ export const mutations = {
   async updatePacking(state, item) {
 
   },
-  loadUserItem(state, item) {
-    // state.partsList = this.$fire.firestore.collections("users").doc(user.uid).collection("parts").get();
-    // const snapshot = await db.collection("users").orderBy("status.total","desc").get()
-    // let rankingTable = [];
-    // snapshot.forEach((item) => {
-    //   rankingTable.push({
-    //     display_name: item.data().display_name,
-    //     screen_name: item.data().screen_name,
-    //     image_path: item.data().image_path,
-    //     battle_point: item.data().status.total,
-    //   });
-    // })
-    // state.partsList = this.$fire.firestore.collections("users").doc(user.uid).collection("parts").get();
-    // state.productsList = this.$fire.firestore.collections("users").doc(user.uid).collection("products").get();
-    // state.packingList = this.$fire.firestore.collections("users").doc(user.uid).collection("packing").get();
+  setUserItem(state, item) {
     state.partsList = item.partsList
     state.productsList = item.productsList
     state.packingList = item.packingList
@@ -118,5 +105,41 @@ export const actions = {
     await deleteUser(user);
     commit("clear");
     this.$router.push('/login');
-  }
+  },
+  async getUserData({ commit }) {
+    state.partsList = this.$fire.firestore.collections("users").doc(user.uid).collection("parts").get();
+    const partsCollection = this.$fire.firestore.collections("users").doc(user.uid).collection("parts").get();
+    let parts = [];
+    partsCollection.forEach((item) => {
+      parts.push({
+        id: item.id,
+        name: item.data().name,
+        count: item.data().count,
+      });
+    });
+    const productsCollection = this.$fire.firestore.collections("users").doc(user.uid).collection("parts").get();
+    let products = [];
+    productsCollection.forEach((item) => {
+      products.push({
+        id: item.id,
+        name: item.data().name,
+        count: item.data().count,
+      });
+    });
+    const packingCollection = this.$fire.firestore.collections("users").doc(user.uid).collection("parts").get();
+    let packing = [];
+    packingCollection.forEach((item) => {
+      packing.push({
+        id: item.id,
+        name: item.data().name,
+        count: item.data().count,
+      });
+    });
+    let item = {
+      partsList: parts,
+      productsList: products,
+      packingList: packing,
+    }
+    commit("setUserItem", item);
+  },
 }
